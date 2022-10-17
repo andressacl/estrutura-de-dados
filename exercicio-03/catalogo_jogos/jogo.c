@@ -3,17 +3,17 @@
 #include <string.h>
 #include "jogo.h"
 
-typedef struct _jogo{
+struct _jogo{
 	char nome[100];
 	char empresa_prod[100];
 	int ano_lan;
-} Jogo;
+};
 
-Jogo *criar_jogo(char nome[100], char empresa_prod[100], int ano_lan){
+Jogo *create_jogo(char nome[100], char empresa_prod[100], int ano_lan){
 	Jogo *novo_jogo = (Jogo*) calloc(1, sizeof(Jogo));
 	strcpy(novo_jogo->nome, nome);
 	strcpy(novo_jogo->empresa_prod, empresa_prod);
-	novo_jogo->ano_lan=ano_lan;
+	novo_jogo->ano_lan = ano_lan;
 	return novo_jogo;
 }
 
@@ -31,11 +31,11 @@ void print_jogo(Jogo *jogo){
 	printf("Ano de lançamento: %i\n", jogo->ano_lan);
 }
 
-void print_nome_jogo(Jogo *jogo){
+void print_name_jogo(Jogo *jogo){
 	printf("%s\n", jogo->nome);
 }
 
-void apagar_jogo(Jogo **jogo_ref){
+void delete_jogo(Jogo **jogo_ref){
 	Jogo *jogo = *jogo_ref;
 	free(jogo);
 	*jogo_ref = NULL;

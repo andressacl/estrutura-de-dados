@@ -11,13 +11,12 @@ Catalogo *create_catalogo(int initial_capacity);
 void resize_catalogo(Catalogo *catalogo, int size); 
 int get_size(Catalogo *catalogo);
 
-char *readLine();
-bool cadastrar_jogo(Catalogo *catalogo);
+bool register_jogo(Catalogo *catalogo);
 Jogo *get_jogo(Catalogo *catalogo, int pos);
 
-void busca_por_ano(Catalogo *catalogo, int ano);
-void busca_por_empresa(Catalogo *catalogo, char *empresa);
+void search_by_year(Catalogo *catalogo, int ano);
+void search_by_company(Catalogo *catalogo, char *empresa);
 
-void apagar_catalogo(Catalogo **catalogo_ref);
+void delete_catalogo(Catalogo **catalogo_ref);
 
 #endif // CATALOGO_H
