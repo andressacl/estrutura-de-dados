@@ -22,8 +22,8 @@ Node *left_rotation(Node *a);
 Node *left_right_rotation(Node *a);
 Node *right_left_rotation(Node *a);
 
-Game *game_search(Node *raiz, int year);
-Game *avl_remove_node(Avl *avl, int year);
+Game *avl_search_game(Node *raiz, int year);
+Game *avl_remove_game(Avl *avl, Game *game);
 Game *get_game(Node *node);
 
 void avl_pre_order(Avl *avl);

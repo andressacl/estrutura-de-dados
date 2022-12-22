@@ -8,8 +8,8 @@
 static Node *node_create(Game *game);
 static Node *node_insert(Node *root, Game *game);
 
-static boolean node_maior(Node *root, Game *game);
-static boolean node_menor(Node *root, Game *game);
+static boolean game_at_right(Node *root, Game *game);
+static boolean game_at_left(Node *root, Game *game);
 
 static Node *avl_insert_node_and_rotate(Node *root, Game *game);
 static Node *select_and_execute_rotation(Node *root, Game *game);
@@ -86,9 +86,9 @@ static Node *avl_insert_node_and_rotate(Node *root, Game *game) {
 static Node *node_insert(Node *root, Game *game) {
     if (root == NULL) {
         root = node_create(game);
-    } else if (node_maior(root, game)) {
+    } else if (game_at_right(root, game)) {
         root->right = avl_insert_node_and_rotate(root->right, game);
-    } else if (node_menor(root, game)) {
+    } else if (game_at_left(root, game)) {
         root->left = avl_insert_node_and_rotate(root->left, game);
     }
     return root;
@@ -96,14 +96,14 @@ static Node *node_insert(Node *root, Game *game) {
 
 static Node *select_and_execute_rotation(Node *root, Game *game) {
     if (desbalanceamento_negativo(root)) {
-        if (node_maior(root->right, game))
+        if (game_at_right(root->right, game))
             root = left_rotation(root);
         else  
             root = right_left_rotation(root);
     }
 
     if (desbalanceamento_positivo(root)) {
-        if (node_menor(root->left, game))
+        if (game_at_left(root->left, game))
             root = right_rotation(root);
         else
             root = left_right_rotation(root);
@@ -111,11 +111,11 @@ static Node *select_and_execute_rotation(Node *root, Game *game) {
     return root;
 }
 
-static boolean node_maior(Node *root, Game *game) {
+static boolean game_at_right(Node *root, Game *game) {
     return game_maior(game, root->game);
 }
 
-static boolean node_menor(Node *root, Game *game) {
+static boolean game_at_left(Node *root, Game *game) {
     return game_maior(root->game, game);
 }
 
@@ -200,12 +200,12 @@ Node *avl_root(Avl *avl){
 }
 
 // Falta implementar função de busca e função de remoção
-Game *game_search(Node *root, int year){
+Game *avl_search_game(Node *root, int year){
     if (root == NULL) return NULL;
     if (get_year(root->game) == year) return root->game;
 
-    if (get_year(root->game) < year) return game_search(root->right, year);
-    return game_search(root->left, year);
+    if (get_year(root->game) < year) return avl_search_game(root->right, year);
+    return avl_search_game(root->left, year);
 }
 
 void node_delete(Node **node_ref){
@@ -217,17 +217,15 @@ void node_delete(Node **node_ref){
     *node_ref = NULL;
 }
 
-static Game *avl_remove_aux(Node **root, int year){
+static Game *avl_remove_aux(Node **root, Game *game){
     Node *rm_node;
     Game *rm_game;
 
     if(*root == NULL) return NULL;
   
-    if (get_year((*root)->game) == year) {
-
+    if ((*root)->game == game) {
         if ((*root)->left == NULL || (*root)->right == NULL){
 
-            // Node *temp = (*root)->left ? (*root)->left : (*root)->right;
             rm_node = *root;
             rm_game = (*root)->game;
 
@@ -244,10 +242,10 @@ static Game *avl_remove_aux(Node **root, int year){
         }
 
     } else {
-        if(year > get_year((*root)->game)) 
-            return avl_remove_aux(&(*root)->right, year);
+        if(game_at_right((*root), game)) 
+            return avl_remove_aux(&(*root)->right, game);
         else
-            return avl_remove_aux(&(*root)->left, year);
+            return avl_remove_aux(&(*root)->left, game);
     }
 
     if ((*root) == NULL) return NULL;
@@ -294,8 +292,8 @@ static Game *troca_max_left(Node *troca, Node *root, Node *ant) {
     return game_p;
 }
 
-Game *avl_remove_node(Avl *avl, int year){
-    if (avl != NULL) return avl_remove_aux(&avl->root, year);
+Game *avl_remove_game(Avl *avl, Game *game){
+    if (avl != NULL) return avl_remove_aux(&avl->root, game);
     return NULL;
 } 
 

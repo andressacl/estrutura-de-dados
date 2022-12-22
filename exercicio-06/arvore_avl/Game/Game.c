@@ -55,6 +55,7 @@ void game_print(Game *game){
 	printf("%s: %d\n", game->name, game->year);
 }
 
+
 void game_delete(Game **game_ref){
 	Game *game = *game_ref;
 

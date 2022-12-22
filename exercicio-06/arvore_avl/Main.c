@@ -24,30 +24,43 @@ int main(){
 	read_and_register_avl(file, avl_games);
 
 	int print_format;
-	scanf("%d", &print_format);
+	scanf("%d\n", &print_format);
 	
 	int search_year;	
 	char ctrl[2] = "F";
 	char *line = readLine();
+	printf("Read: %s\n", line);
 
 	while(strcmp(line, ctrl) != 0){
 		search_year = atoi(line);
 
-		Game *rm_game = avl_remove_node(avl_games, search_year);
+		// Game *s_game = avl_search_game(avl_root(avl_games), search_year);
+		// if (s_game != NULL) {
+		// 	// game_print(s_game);
+		// 	Game *rm_game = avl_remove_game(avl_games, s_game);
+		// 	if (rm_game != NULL) printf("Removido");
+		// }
+		Game *rm_game = NULL;
+		
+		Game *s_game = avl_search_game(avl_root(avl_games), search_year);
+		if (s_game != NULL) rm_game = avl_remove_game(avl_games, s_game);
+
 		while (rm_game != NULL){
-			printf("Deletado: ");
-			game_print(rm_game);
+			
 			game_delete(&rm_game);
-			rm_game = avl_remove_node(avl_games, search_year);
+			s_game = avl_search_game(avl_root(avl_games), search_year);
+			if (s_game != NULL) rm_game = avl_remove_game(avl_games, s_game);
+			else rm_game = NULL;
 		}
 
 		line = readLine();
+		printf("Read: %s\n", line);
 	}
 
 	avl_print_format(avl_games, print_format);
 
 	// avl_imprimir(avl_games);
-	free(line);
+	// free(line);
 	avl_delete(&avl_games);
 	fclose(file);
 }
