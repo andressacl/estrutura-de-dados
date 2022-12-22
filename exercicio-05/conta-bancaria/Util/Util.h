@@ -6,7 +6,6 @@
 typedef int boolean;
 
 void boolean_print(boolean bool);
-int power(int x, int y);
 
 char *readLine();
 

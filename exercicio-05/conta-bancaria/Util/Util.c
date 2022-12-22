@@ -31,13 +31,7 @@ char *readLine() {
         {
             currentInput = (char)getchar();
         }
-    } while(((currentInput != '\n') && (currentInput != ','))&& (currentInput != EOF));
+    } while(((currentInput != '\n') && (currentInput != ';')) && (currentInput != EOF));
     string[index - 1] = '\0';
     return string;
 }
-
-int power(int x, int y){
-      if(y == 0)
-        return 1;
-     return (x * power(x,y-1) );
-    }

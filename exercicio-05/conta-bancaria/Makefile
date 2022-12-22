@@ -2,11 +2,16 @@ ITEM = Customer/Customer.c
 MAIN = Main.c
 UTIL = Util/Util.c
 TREE = Tree/Tree.c
+CPF = CPF/Cpf.c
 BINARY = Main
 NAME = conta_bancaria
 
 all:
-	gcc -Wall -g $(ITEM) $(TREE) $(UTIL) $(MAIN) -L. -o $(BINARY)
+	gcc -Wall -g $(ITEM) $(TREE) $(UTIL) $(MAIN) $(CPF) -L. -o $(BINARY)
+
+# all:
+
+# 	gcc -Wall -g $(ITEM) $(UTIL) $(MAIN) $(CPF) -L. -o $(BINARY)
 
 run:
 	./$(BINARY)
