@@ -28,34 +28,26 @@ int main(){
 	int search_year;	
 	char ctrl[2] = "F";
 	char *line = readLine();
-	// printf("Read: %s\n", line);
 
 	while(strcmp(line, ctrl) != 0){
 		search_year = atoi(line);
 		
 		Game *s_game = avl_search_game(avl_root(avl_games), search_year);
 
-		// if (s_game != NULL) {
-		// 	printf("main:");
-		// 	game_print(s_game);
-		// 	if (avl_remove_game(avl_games, s_game)) printf("ok\n");
-		// }
-
 		while (s_game != NULL){
 			
 			avl_remove_game(avl_games, s_game);
 			s_game = avl_search_game(avl_root(avl_games), search_year);
-		
-			// avl_imprimir(avl_games);
-			// printf("\n-------------\n");
+
 		}
 
+		char *line_aux = line;
 		line = readLine();
+		free(line_aux);
 	}
 
 	avl_print_format(avl_games, print_format);
 
-	// avl_imprimir(avl_games);
 	free(line);
 	avl_delete(&avl_games);
 	fclose(file);

@@ -22,9 +22,9 @@ Node *left_rotation(Node *a);
 Node *left_right_rotation(Node *a);
 Node *right_left_rotation(Node *a);
 
+Game *get_game(Node *node);
 Game *avl_search_game(Node *raiz, int year);
 boolean avl_remove_game(Avl *avl, Game *game);
-Game *get_game(Node *node);
 
 void avl_pre_order(Avl *avl);
 void avl_in_order(Avl *avl);

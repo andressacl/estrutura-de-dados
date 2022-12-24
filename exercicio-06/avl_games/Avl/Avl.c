@@ -17,9 +17,7 @@ static Node *select_and_execute_rotation(Node *root, Game *game);
 static boolean desbalanceamento_positivo(Node *root);
 static boolean desbalanceamento_negativo(Node *root);
 
-static boolean avl_remove_aux(Node **root, Game *game);
-
-// static void node_delete(Node **node_ref);
+static boolean avl_remove_aux(Node **root, Game *game, Game *og_game);
 
 // Structs
 struct node_st {
@@ -216,20 +214,20 @@ Game *avl_search_game(Node *root, int year){
 
 // Remoção
 boolean avl_remove_game(Avl *avl, Game *game){
-    if (avl->root != NULL) return avl_remove_aux(&(avl->root), game);
+    if (avl->root != NULL) return avl_remove_aux(&(avl->root), game, game);
     return FALSE;
 } 
 
-static boolean avl_remove_aux(Node **root, Game *game){
+static boolean avl_remove_aux(Node **root, Game *game, Game *og_game){
 
     if((*root) == NULL) return FALSE;
 
     if (game_at_right((*root), game)){
-            avl_remove_aux(&(*root)->right, game);
+            avl_remove_aux(&(*root)->right, game, og_game);
             (*root) = avl_rebalance(&(*root));
             return TRUE;
     } else if (game_at_left((*root), game)) {
-            avl_remove_aux(&(*root)->left, game);
+            avl_remove_aux(&(*root)->left, game, og_game);
             (*root) = avl_rebalance(&(*root));
             return TRUE;
     }
@@ -237,9 +235,13 @@ static boolean avl_remove_aux(Node **root, Game *game){
     if ((*root)->left != NULL && (*root)->right != NULL){
         Node *max_left = node_max((*root)->left);
 
+        Game *rm_game = (*root)->game; 
         (*root)->game = max_left->game;
 
-        avl_remove_aux(&((*root)->left), (*root)->game);
+        // printf("rm game 2 filho");game_print(rm_game);
+        game_delete(&rm_game);
+
+        avl_remove_aux(&((*root)->left), (*root)->game, og_game);
         return TRUE;
     }
   
@@ -252,6 +254,7 @@ static boolean avl_remove_aux(Node **root, Game *game){
     Node *q = (*root);
     (*root) = p;
 
+    if (q->game == og_game) game_delete(&(q->game));
     free(q);
     
     return TRUE;
@@ -313,15 +316,6 @@ void avl_imprimir(Avl *avl) {
 }
 
 // Desalocar memória
-// static void node_delete(Node **node_ref){
-//     Node *node = *node_ref;
-//     game_delete(&(node->game));
-//     free(node->right);
-//     free(node->left);
-//     free(node);
-//     *node_ref = NULL;
-// }
-
 static void avl_delete_aux(Node **root) {
     if (*root != NULL) {
         avl_delete_aux(&((*root)->left));
