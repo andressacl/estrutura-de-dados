@@ -3,7 +3,7 @@ MAIN = Main.c
 UTIL = Util/Util.c
 TREE = Avl/Avl.c
 BINARY = Main
-NAME = arvore_avl
+NAME = avl_games
 
 all:
 	gcc -Wall -g $(ITEM) $(TREE) $(UTIL) $(MAIN) -L. -o $(BINARY)

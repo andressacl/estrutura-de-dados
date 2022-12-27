@@ -19,6 +19,8 @@ int main(){
 		exit(1);
 	}
 
+	fseek(file, 3, SEEK_SET);
+
 	Avl *avl_games = avl_create();
 	read_and_register_avl(file, avl_games);
 

@@ -47,7 +47,6 @@ void game_print(Game *game){
 	printf("%s\n", game->name);
 }
 
-
 void game_delete(Game **game_ref){
 	Game *game = *game_ref;
 

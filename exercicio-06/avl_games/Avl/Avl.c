@@ -12,10 +12,9 @@ static boolean game_at_right(Node *root, Game *game);
 static boolean game_at_left(Node *root, Game *game);
 
 static Node *avl_insert_node_and_rotate(Node *root, Game *game);
-static Node *select_and_execute_rotation(Node *root, Game *game);
 
-static boolean desbalanceamento_positivo(Node *root);
-static boolean desbalanceamento_negativo(Node *root);
+static boolean node_positive_imbalance(Node *root);
+static boolean node_negative_imbalance(Node *root);
 
 static boolean avl_remove_aux(Node **root, Game *game, Game *og_game);
 
@@ -125,31 +124,30 @@ Node *right_left_rotation(Node *a) {
     return left_rotation(a);
 }
 
-
 // Balanceamento
 int node_get_balance(Node *node){
     if (node == NULL) return 0;
     return node_height(node->left)-node_height(node->right);
 }
 
-static boolean desbalanceamento_positivo(Node *root) {
+static boolean node_positive_imbalance(Node *root) {
     return node_height(root->left) - node_height(root->right) == 2;
 }
 
-static boolean desbalanceamento_negativo(Node *root) {
+static boolean node_negative_imbalance(Node *root) {
     return node_height(root->left) - node_height(root->right) == -2;
 }
 
 Node *avl_rebalance(Node **node){
 
-    if (desbalanceamento_negativo(*node)){
+    if (node_negative_imbalance(*node)){
 
         if (node_get_balance((*node)->right) > 0)
             return right_left_rotation(*node);
         else 
             return left_rotation(*node);
         
-    } else if (desbalanceamento_positivo(*node)){
+    } else if (node_positive_imbalance(*node)){
         
         if (node_get_balance((*node)->left) < 0)
             return left_right_rotation(*node);
@@ -170,7 +168,7 @@ boolean avl_insert(Avl *avl, Game *game){
 static Node *avl_insert_node_and_rotate(Node *root, Game *game) {
     root = node_insert(root, game);
 
-    root = select_and_execute_rotation(root, game);
+    root = avl_rebalance(&root);
 
     return root;
 }
@@ -182,23 +180,6 @@ static Node *node_insert(Node *root, Game *game) {
         root->right = avl_insert_node_and_rotate(root->right, game);
     } else if (game_at_left(root, game)) {
         root->left = avl_insert_node_and_rotate(root->left, game);
-    }
-    return root;
-}
-
-static Node *select_and_execute_rotation(Node *root, Game *game) {
-    if (desbalanceamento_negativo(root)) {
-        if (game_at_right(root->right, game))
-            root = left_rotation(root);
-        else  
-            root = right_left_rotation(root);
-    }
-
-    if (desbalanceamento_positivo(root)) {
-        if (game_at_left(root->left, game))
-            root = right_rotation(root);
-        else
-            root = left_right_rotation(root);
     }
     return root;
 }
@@ -238,7 +219,6 @@ static boolean avl_remove_aux(Node **root, Game *game, Game *og_game){
         Game *rm_game = (*root)->game; 
         (*root)->game = max_left->game;
 
-        // printf("rm game 2 filho");game_print(rm_game);
         game_delete(&rm_game);
 
         avl_remove_aux(&((*root)->left), (*root)->game, og_game);
